@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Monitor Sismico</string>
+    <string name="eq_empty_view">Sin Actividad Sismica</string>
+</resources>
