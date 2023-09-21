@@ -4,12 +4,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
 
-
-class TeApiService {
-
     interface TeApiService {
         @GET("all_hour.geojson")
-        fun getTerremotosUltimaHora(): String
+        suspend fun getTerremotosUltimaHora(): String
     }
     //crea el servicio de retrofit con la  interfaz creada
     private var retrofit = Retrofit.Builder()
@@ -18,4 +15,3 @@ class TeApiService {
         .build()
 
     var service: TeApiService = retrofit.create(TeApiService::class.java)
-}
