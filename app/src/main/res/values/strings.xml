@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Monitor Sismico</string>
     <string name="eq_empty_view">Sin Actividad Sismica</string>
+    <string name="magnitude_format">%.2f</string>
 </resources>

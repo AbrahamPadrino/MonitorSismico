@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         //Observer
         val viewModel: MainViewModel = ViewModelProvider(this)[MainViewModel::class.java]
         //Asignar el adapter al RecyclerView
-        val adapter = TeAdapter()
+        val adapter = TeAdapter(this)
         binding.eqRecycler.adapter = adapter
         viewModel.eqList.observe(this, Observer {
             eqList: MutableList<Terremoto> ->
