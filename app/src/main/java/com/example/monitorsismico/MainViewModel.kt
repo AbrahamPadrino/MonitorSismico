@@ -1,13 +1,10 @@
 package com.example.monitorsismico
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
-import org.json.JSONArray
-import org.json.JSONObject
 
 class MainViewModel: ViewModel() {
     /* otro forma para corutina
@@ -30,36 +27,32 @@ class MainViewModel: ViewModel() {
     private suspend fun fetchTerremotos(): MutableList<Terremoto> {
         //hilo secundario
         return withContext(Dispatchers.IO) {
-            val eqListString : String = service.getTerremotosUltimaHora()
-            val eqList1 :MutableList<Terremoto> = parseEqResult(eqListString)
+            val eqJsonResponse :TeJsonResponse= service.getTerremotosUltimaHora()
+            val eqList1 :MutableList<Terremoto> = parseEqResult(eqJsonResponse)
             eqList1
         }
     }
 
-    private fun parseEqResult(eqListString: String) :MutableList<Terremoto> {
-        val eqJsonObject = JSONObject(eqListString)
-        val featuresJsonArray : JSONArray = eqJsonObject.getJSONArray("features")
-
+    private fun parseEqResult(eqJsonResponse: TeJsonResponse) :MutableList<Terremoto> {
         //Lista vacia
         val eqList2 :MutableList<Terremoto> = mutableListOf<Terremoto>()
         //
+        val featuresList :List<Feature> = eqJsonResponse.features
 
-        for (i :Int in 0 until featuresJsonArray.length()) {
-            val featuresJsonObject :JSONObject = featuresJsonArray[i] as JSONObject
-            val id : String = featuresJsonObject.getString("id")
+        for (feature :Feature in featuresList){
+            val properties :Properties = feature.properties
 
-            val propertiesJsonObject :JSONObject = featuresJsonObject.getJSONObject("properties")
-            val magnitude :Double = propertiesJsonObject.getDouble("mag")
-            val place :String = propertiesJsonObject.getString("place")
-            val time :Long = propertiesJsonObject.getLong("time")
+            val id :String = feature.id
+            val magnitude :Double = properties.mag
+            val place :String = properties.place
+            val time :Long = properties.time
 
-            val geometryJsonObject :JSONObject = featuresJsonObject.getJSONObject("geometry")
-            val coordinatesJsonArray :JSONArray = geometryJsonObject.getJSONArray("coordinates")
-            val longitude :Double = coordinatesJsonArray.getDouble(0)
-            val latitude :Double = coordinatesJsonArray.getDouble(1)
+            val geometry :Geometry = feature.geometry
+            val longitude :Double = geometry.longitude
+            val latitude :Double = geometry.latitude
 
-            val terremoto = Terremoto(id, place, magnitude, time, longitude, latitude)
-            eqList2.add(terremoto)
+            eqList2.add(Terremoto(id, place, magnitude, time, longitude, latitude))
+
         }
         return eqList2
     }
