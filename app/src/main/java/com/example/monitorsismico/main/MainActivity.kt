@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.monitorsismico.Terremoto
+import com.example.monitorsismico.api.ApiResponseStatus
 import com.example.monitorsismico.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -28,9 +29,19 @@ class MainActivity : AppCompatActivity() {
         viewModel.eqList.observe(this, Observer {
             eqList: MutableList<Terremoto> ->
             adapter.submitList(eqList)
-
             //Mostrar mensaje de lista vacia.
             handleEmptyView(eqList, binding)
+        })
+        //Observe para el status de la carga de terremotos
+        viewModel.status.observe(this, Observer {
+            apiResponseStatus : ApiResponseStatus ->
+            if (apiResponseStatus == ApiResponseStatus.LOADING) {
+                binding.loadingWheel.visibility = View.VISIBLE
+            } else if (apiResponseStatus == ApiResponseStatus.DONE) {
+                binding.loadingWheel.visibility = View.GONE
+            } else if (apiResponseStatus == ApiResponseStatus.NOT_INTERNET) {
+                binding.loadingWheel.visibility = View.GONE
+            }
         })
 
         adapter.onItemClickListener = {

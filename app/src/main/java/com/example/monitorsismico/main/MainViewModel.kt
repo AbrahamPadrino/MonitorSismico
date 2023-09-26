@@ -3,7 +3,7 @@ package com.example.monitorsismico.main
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
-import com.example.monitorsismico.Terremoto
+import com.example.monitorsismico.api.ApiResponseStatus
 import com.example.monitorsismico.database.getDatabase
 import kotlinx.coroutines.*
 import java.net.UnknownHostException
@@ -19,26 +19,23 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
     private val database = getDatabase(application) //1.2 instancia a la bd y se pasa "application"como contexto al repository
     private val repository = MainRepository(database)
 
+    private val _status = MutableLiveData<ApiResponseStatus>()
+    val status: LiveData<ApiResponseStatus>
+        get() = _status
+
     val eqList = repository.eqListBd
 
     init {
-        /* corutineScope.launch {
-        * */
-            //Corutina en hilo principal
-
             viewModelScope.launch {
                 try {
+                    _status.value = ApiResponseStatus.LOADING
                     repository.fetchTerremotos()
+                    _status.value = ApiResponseStatus.DONE
                 } catch (e:UnknownHostException) {
+                    _status.value = ApiResponseStatus.NOT_INTERNET
                     Log.d(TAG,"No internet connection",e)
                 }
 
             }
     }
-    /*
-    override fun onCleared() {
-        super.onCleared()
-        job.cancel()//finaliza corutina
-    }
-     */
 }
