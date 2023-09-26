@@ -1,4 +1,4 @@
-package com.example.monitorsismico
+package com.example.monitorsismico.api
 
 class Geometry(private val coordinates:Array<Double>) {
     val longitude:Double

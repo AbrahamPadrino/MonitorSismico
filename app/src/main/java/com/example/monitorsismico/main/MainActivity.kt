@@ -1,13 +1,13 @@
-package com.example.monitorsismico
+package com.example.monitorsismico.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.monitorsismico.Terremoto
 import com.example.monitorsismico.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -19,7 +19,9 @@ class MainActivity : AppCompatActivity() {
         //Establecer el layoutManager
         binding.eqRecycler.layoutManager = LinearLayoutManager(this)
         //Observer
-        val viewModel: MainViewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        val viewModel: MainViewModel = ViewModelProvider(this,
+            MainViewModelFactory(application))[MainViewModel::class.java]
+            //application = contexto
         //Asignar el adapter al RecyclerView
         val adapter = TeAdapter(this)
         binding.eqRecycler.adapter = adapter

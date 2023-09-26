@@ -1,16 +1,18 @@
-package com.example.monitorsismico
+package com.example.monitorsismico.main
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.monitorsismico.R
+import com.example.monitorsismico.Terremoto
 import com.example.monitorsismico.databinding.EqListItemBinding
 
-class TeAdapter(private val context: Context): ListAdapter<Terremoto, TeAdapter.TeViewHolder>(DiffCallback) {
+class TeAdapter(private val context: Context): ListAdapter<Terremoto, TeAdapter.TeViewHolder>(
+    DiffCallback
+) {
 
     //permite al adapter conocer modificaciones en los items.
     companion object DiffCallback: DiffUtil.ItemCallback<Terremoto>() {
@@ -30,7 +32,7 @@ class TeAdapter(private val context: Context): ListAdapter<Terremoto, TeAdapter.
         return TeViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: TeAdapter.TeViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: TeViewHolder, position: Int) {
         val terremoto: Terremoto = getItem(position)
         holder.bind(terremoto)
     }
